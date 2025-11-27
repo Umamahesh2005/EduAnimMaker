@@ -153,7 +153,7 @@ def get_fallback_animation_script(concept: str) -> dict:
 
 
 def generate_manim_code(script: dict, output_name: str) -> str:
-    """Generate Manim Python code based on the animation script."""
+    """Generate Manim Python code based on the animation script (LaTeX-free version)."""
     anim_type = script.get("type", "circle")
     title = script.get("title", "Animation")
     color = script.get("color", "BLUE")
@@ -186,14 +186,14 @@ class EducationalAnimation(Scene):
         if show_labels:
             code += '''
         # Add labels
-        radius_label = MathTex("r", font_size=36).next_to(radius_line, DOWN, buff=0.2)
+        radius_label = Text("r", font_size=28, color=YELLOW).next_to(radius_line, DOWN, buff=0.2)
         self.play(Write(radius_label))
 '''
         if show_formula:
             code += '''
         # Show formulas
-        area_formula = MathTex("A = \\\\pi r^2", font_size=40)
-        circumference_formula = MathTex("C = 2\\\\pi r", font_size=40)
+        area_formula = Text("Area = pi * r^2", font_size=32)
+        circumference_formula = Text("Circumference = 2 * pi * r", font_size=32)
         formulas = VGroup(area_formula, circumference_formula).arrange(DOWN, buff=0.3)
         formulas.to_edge(DOWN)
         self.play(Write(area_formula))
@@ -212,16 +212,16 @@ class EducationalAnimation(Scene):
         # Add vertex labels
         vertices = triangle.get_vertices()
         labels = VGroup(
-            MathTex("A").next_to(vertices[0], UP),
-            MathTex("B").next_to(vertices[1], DOWN + LEFT),
-            MathTex("C").next_to(vertices[2], DOWN + RIGHT)
+            Text("A", font_size=28).next_to(vertices[0], UP),
+            Text("B", font_size=28).next_to(vertices[1], DOWN + LEFT),
+            Text("C", font_size=28).next_to(vertices[2], DOWN + RIGHT)
         )
         self.play(Write(labels))
 '''
         if show_formula:
             code += '''
         # Show angle sum
-        angle_sum = MathTex("\\\\angle A + \\\\angle B + \\\\angle C = 180^\\\\circ", font_size=36)
+        angle_sum = Text("Angle A + Angle B + Angle C = 180 degrees", font_size=28)
         angle_sum.to_edge(DOWN)
         self.play(Write(angle_sum))
 '''
@@ -235,14 +235,14 @@ class EducationalAnimation(Scene):
         if show_labels:
             code += '''
         # Add side label
-        side_label = MathTex("s").next_to(square, DOWN, buff=0.3)
+        side_label = Text("s", font_size=28).next_to(square, DOWN, buff=0.3)
         self.play(Write(side_label))
 '''
         if show_formula:
             code += '''
         # Show formulas
-        area = MathTex("A = s^2", font_size=40)
-        perimeter = MathTex("P = 4s", font_size=40)
+        area = Text("Area = s^2", font_size=32)
+        perimeter = Text("Perimeter = 4s", font_size=32)
         formulas = VGroup(area, perimeter).arrange(DOWN, buff=0.3)
         formulas.to_edge(DOWN)
         self.play(Write(formulas))
@@ -257,14 +257,14 @@ class EducationalAnimation(Scene):
         if show_labels:
             code += '''
         # Add dimension labels
-        width_label = MathTex("w").next_to(rectangle, DOWN, buff=0.3)
-        height_label = MathTex("h").next_to(rectangle, RIGHT, buff=0.3)
+        width_label = Text("w", font_size=28).next_to(rectangle, DOWN, buff=0.3)
+        height_label = Text("h", font_size=28).next_to(rectangle, RIGHT, buff=0.3)
         self.play(Write(width_label), Write(height_label))
 '''
         if show_formula:
             code += '''
         # Show formulas
-        area = MathTex("A = w \\\\times h", font_size=40)
+        area = Text("Area = w x h", font_size=32)
         area.to_edge(DOWN)
         self.play(Write(area))
 '''
@@ -292,19 +292,19 @@ class EducationalAnimation(Scene):
         if show_labels:
             code += '''
         # Side labels
-        a_label = MathTex("a").next_to(Line(ORIGIN, RIGHT * a), DOWN, buff=0.2)
-        b_label = MathTex("b").next_to(Line(RIGHT * a, RIGHT * a + UP * b), RIGHT, buff=0.2)
-        c_label = MathTex("c").next_to(Line(ORIGIN, RIGHT * a + UP * b), UP + LEFT, buff=0.2)
+        a_label = Text("a", font_size=28).next_to(Line(ORIGIN, RIGHT * a), DOWN, buff=0.2)
+        b_label = Text("b", font_size=28).next_to(Line(RIGHT * a, RIGHT * a + UP * b), RIGHT, buff=0.2)
+        c_label = Text("c", font_size=28).next_to(Line(ORIGIN, RIGHT * a + UP * b), UP + LEFT, buff=0.2)
         self.play(Write(a_label), Write(b_label), Write(c_label))
 '''
         if show_formula:
             code += '''
         # Pythagorean theorem formula
-        theorem = MathTex("a^2 + b^2 = c^2", font_size=48)
+        theorem = Text("a^2 + b^2 = c^2", font_size=40)
         theorem.to_edge(DOWN)
         self.play(Write(theorem))
         
-        # Highlight squares
+        # Highlight
         self.wait(0.5)
         box = SurroundingRectangle(theorem, color=YELLOW)
         self.play(Create(box))
@@ -320,8 +320,9 @@ class EducationalAnimation(Scene):
             y_length=4,
             axis_config={{"include_tip": True}}
         )
-        axes_labels = axes.get_axis_labels(x_label="x", y_label="y")
-        self.play(Create(axes), Write(axes_labels))
+        x_label = Text("x", font_size=24).next_to(axes.x_axis, RIGHT)
+        y_label = Text("y", font_size=24).next_to(axes.y_axis, UP)
+        self.play(Create(axes), Write(x_label), Write(y_label))
         
         # Draw sine wave
         sine_curve = axes.plot(lambda x: np.sin(x), color={color}, x_range=[0, 2*PI])
@@ -330,7 +331,7 @@ class EducationalAnimation(Scene):
         if show_formula:
             code += '''
         # Show formula
-        formula = MathTex("y = \\\\sin(x)", font_size=40)
+        formula = Text("y = sin(x)", font_size=32)
         formula.to_edge(DOWN)
         self.play(Write(formula))
 '''
@@ -345,8 +346,9 @@ class EducationalAnimation(Scene):
             y_length=4,
             axis_config={{"include_tip": True}}
         )
-        axes_labels = axes.get_axis_labels(x_label="x", y_label="y")
-        self.play(Create(axes), Write(axes_labels))
+        x_label = Text("x", font_size=24).next_to(axes.x_axis, RIGHT)
+        y_label = Text("y", font_size=24).next_to(axes.y_axis, UP)
+        self.play(Create(axes), Write(x_label), Write(y_label))
         
         # Draw cosine wave
         cosine_curve = axes.plot(lambda x: np.cos(x), color={color}, x_range=[0, 2*PI])
@@ -355,7 +357,7 @@ class EducationalAnimation(Scene):
         if show_formula:
             code += '''
         # Show formula
-        formula = MathTex("y = \\\\cos(x)", font_size=40)
+        formula = Text("y = cos(x)", font_size=32)
         formula.to_edge(DOWN)
         self.play(Write(formula))
 '''
@@ -370,8 +372,9 @@ class EducationalAnimation(Scene):
             y_length=5,
             axis_config={{"include_tip": True}}
         )
-        axes_labels = axes.get_axis_labels(x_label="x", y_label="y")
-        self.play(Create(axes), Write(axes_labels))
+        x_label = Text("x", font_size=24).next_to(axes.x_axis, RIGHT)
+        y_label = Text("y", font_size=24).next_to(axes.y_axis, UP)
+        self.play(Create(axes), Write(x_label), Write(y_label))
         
         # Draw parabola
         parabola = axes.plot(lambda x: x**2, color={color}, x_range=[-2.2, 2.2])
@@ -379,13 +382,13 @@ class EducationalAnimation(Scene):
         
         # Mark vertex
         vertex = Dot(axes.coords_to_point(0, 0), color=YELLOW)
-        vertex_label = MathTex("(0, 0)").next_to(vertex, DOWN + RIGHT, buff=0.2)
+        vertex_label = Text("(0, 0)", font_size=24).next_to(vertex, DOWN + RIGHT, buff=0.2)
         self.play(Create(vertex), Write(vertex_label))
 '''
         if show_formula:
             code += '''
         # Show formula
-        formula = MathTex("y = x^2", font_size=40)
+        formula = Text("y = x^2", font_size=32)
         formula.to_edge(DOWN)
         self.play(Write(formula))
 '''
@@ -400,12 +403,13 @@ class EducationalAnimation(Scene):
             y_length=5,
             axis_config={{"include_tip": True}}
         )
-        axes_labels = axes.get_axis_labels(x_label="x", y_label="y")
-        self.play(Create(axes), Write(axes_labels))
+        x_label = Text("x", font_size=24).next_to(axes.x_axis, RIGHT)
+        y_label = Text("y", font_size=24).next_to(axes.y_axis, UP)
+        self.play(Create(axes), Write(x_label), Write(y_label))
         
         # Original function
         curve = axes.plot(lambda x: x**2, color=BLUE, x_range=[-1.5, 2.8])
-        curve_label = MathTex("f(x) = x^2", color=BLUE, font_size=32).to_edge(RIGHT).shift(UP)
+        curve_label = Text("f(x) = x^2", color=BLUE, font_size=24).to_edge(RIGHT).shift(UP)
         self.play(Create(curve), Write(curve_label))
         
         # Tangent line at a point
@@ -416,7 +420,7 @@ class EducationalAnimation(Scene):
         
         # Derivative
         derivative = axes.plot(lambda x: 2*x, color=GREEN, x_range=[-1, 2.5])
-        deriv_label = MathTex("f'(x) = 2x", color=GREEN, font_size=32).next_to(curve_label, DOWN)
+        deriv_label = Text("f'(x) = 2x", color=GREEN, font_size=24).next_to(curve_label, DOWN)
         self.play(Create(derivative), Write(deriv_label))
 '''
     
@@ -430,8 +434,9 @@ class EducationalAnimation(Scene):
             y_length=5,
             axis_config={{"include_tip": True}}
         )
-        axes_labels = axes.get_axis_labels(x_label="x", y_label="y")
-        self.play(Create(axes), Write(axes_labels))
+        x_label = Text("x", font_size=24).next_to(axes.x_axis, RIGHT)
+        y_label = Text("y", font_size=24).next_to(axes.y_axis, UP)
+        self.play(Create(axes), Write(x_label), Write(y_label))
         
         # Function curve
         curve = axes.plot(lambda x: 0.5*x**2, color={color}, x_range=[0, 3])
@@ -441,8 +446,8 @@ class EducationalAnimation(Scene):
         area = axes.get_area(curve, x_range=[0.5, 2.5], color=BLUE, opacity=0.5)
         self.play(FadeIn(area))
         
-        # Integral symbol
-        integral = MathTex("\\\\int_a^b f(x) \\\\, dx", font_size=40)
+        # Integral description
+        integral = Text("Integral: Area under the curve", font_size=32)
         integral.to_edge(DOWN)
         self.play(Write(integral))
 '''
