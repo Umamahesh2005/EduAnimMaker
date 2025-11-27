@@ -78,6 +78,12 @@ def get_fallback_explanation(concept: str) -> str:
         "function": "A function is a mathematical relationship that assigns exactly one output to each input. Functions are the building blocks of mathematics and help us describe how one quantity depends on another.",
         "derivative": "The derivative measures the rate of change of a function at any point. It tells us how fast something is changing and is fundamental to calculus and physics for understanding motion and optimization.",
         "integral": "Integration is the process of finding the area under a curve. It's the reverse of differentiation and is used to calculate accumulated quantities like distance, area, and volume.",
+        "vector": "Vectors are mathematical objects that have both magnitude and direction. They are used to represent physical quantities like velocity, force, and displacement. Vector addition combines two vectors to produce a resultant vector.",
+        "bubble sort": "Bubble sort is a simple sorting algorithm that repeatedly steps through the list, compares adjacent elements and swaps them if they are in the wrong order. The pass through the list is repeated until the list is sorted.",
+        "sorting": "Sorting algorithms arrange elements in a specific order. Bubble sort repeatedly compares and swaps adjacent elements until the entire list is sorted from smallest to largest.",
+        "graph": "Graphs visually represent mathematical functions by plotting points on a coordinate system. The x-axis represents input values and the y-axis shows corresponding outputs. Key features include maxima, minima, and intercepts.",
+        "maxima": "In calculus, a maximum is the highest point on a curve within a given interval. Local maxima occur where the function changes from increasing to decreasing. These points are critical for optimization problems.",
+        "minima": "In calculus, a minimum is the lowest point on a curve within a given interval. Local minima occur where the function changes from decreasing to increasing. Finding minima is essential in optimization.",
     }
     
     for key, explanation in explanations.items():
@@ -143,6 +149,13 @@ def get_fallback_animation_script(concept: str) -> dict:
         "function": {"type": "function_graph", "title": "Function Graph", "color": "BLUE", "show_labels": True, "show_formula": True},
         "derivative": {"type": "derivative", "title": "The Derivative", "color": "RED", "show_labels": True, "show_formula": True},
         "integral": {"type": "integral", "title": "The Integral", "color": "PURPLE", "show_labels": True, "show_formula": True},
+        "vector": {"type": "vector_addition", "title": "Vector Addition", "color": "BLUE", "show_labels": True, "show_formula": True},
+        "arrow": {"type": "vector_addition", "title": "Vector Addition", "color": "BLUE", "show_labels": True, "show_formula": True},
+        "bubble": {"type": "bubble_sort", "title": "Bubble Sort Algorithm", "color": "BLUE", "show_labels": True, "show_formula": False},
+        "sort": {"type": "bubble_sort", "title": "Sorting Algorithm", "color": "GREEN", "show_labels": True, "show_formula": False},
+        "maxima": {"type": "graph_extrema", "title": "Graph with Maxima and Minima", "color": "BLUE", "show_labels": True, "show_formula": True},
+        "minima": {"type": "graph_extrema", "title": "Graph with Maxima and Minima", "color": "BLUE", "show_labels": True, "show_formula": True},
+        "extrema": {"type": "graph_extrema", "title": "Finding Extrema", "color": "PURPLE", "show_labels": True, "show_formula": True},
     }
     
     for key, script in scripts.items():
@@ -150,6 +163,84 @@ def get_fallback_animation_script(concept: str) -> dict:
             return script
     
     return {"type": "circle", "title": concept.title(), "color": "BLUE", "show_labels": True, "show_formula": False}
+
+
+def generate_scene_breakdown(script: dict, concept: str) -> list:
+    """Generate a scene-by-scene breakdown of the animation."""
+    anim_type = script.get("type", "circle")
+    title = script.get("title", "Animation")
+    
+    scene_templates = {
+        "circle": [
+            {"scene": 1, "name": "Title Introduction", "duration": "1.5s", "description": "Display title 'The Circle' at the top of the screen"},
+            {"scene": 2, "name": "Circle Creation", "duration": "2s", "description": "Animate the circle being drawn from center outward"},
+            {"scene": 3, "name": "Center Point", "duration": "1s", "description": "Show the center point of the circle"},
+            {"scene": 4, "name": "Radius Line", "duration": "1s", "description": "Draw a line from center to edge showing the radius"},
+            {"scene": 5, "name": "Labels", "duration": "1s", "description": "Add label 'r' to indicate the radius"},
+            {"scene": 6, "name": "Formulas", "duration": "2s", "description": "Display Area and Circumference formulas"}
+        ],
+        "triangle": [
+            {"scene": 1, "name": "Title Introduction", "duration": "1.5s", "description": "Display title 'The Triangle'"},
+            {"scene": 2, "name": "Triangle Creation", "duration": "2s", "description": "Draw the three-sided polygon"},
+            {"scene": 3, "name": "Vertex Labels", "duration": "1.5s", "description": "Label vertices A, B, and C"},
+            {"scene": 4, "name": "Angle Sum", "duration": "2s", "description": "Show that angles sum to 180 degrees"}
+        ],
+        "pythagorean": [
+            {"scene": 1, "name": "Title Introduction", "duration": "1.5s", "description": "Display 'Pythagorean Theorem'"},
+            {"scene": 2, "name": "Right Triangle", "duration": "2s", "description": "Draw right triangle with sides a, b, c"},
+            {"scene": 3, "name": "Right Angle Marker", "duration": "1s", "description": "Show the 90-degree angle marker"},
+            {"scene": 4, "name": "Side Labels", "duration": "1.5s", "description": "Label sides a, b, and c (hypotenuse)"},
+            {"scene": 5, "name": "Theorem Formula", "duration": "2s", "description": "Display a^2 + b^2 = c^2"},
+            {"scene": 6, "name": "Highlight", "duration": "1s", "description": "Highlight the theorem with a box"}
+        ],
+        "vector_addition": [
+            {"scene": 1, "name": "Title Introduction", "duration": "1.5s", "description": "Display 'Vector Addition'"},
+            {"scene": 2, "name": "First Vector", "duration": "1.5s", "description": "Draw vector A as an arrow"},
+            {"scene": 3, "name": "Second Vector", "duration": "1.5s", "description": "Draw vector B starting from A's tip"},
+            {"scene": 4, "name": "Resultant Vector", "duration": "2s", "description": "Draw the resultant vector from origin to B's tip"},
+            {"scene": 5, "name": "Labels", "duration": "1s", "description": "Label all vectors A, B, and A+B"},
+            {"scene": 6, "name": "Formula", "duration": "1.5s", "description": "Show vector addition rule"}
+        ],
+        "bubble_sort": [
+            {"scene": 1, "name": "Title Introduction", "duration": "1.5s", "description": "Display 'Bubble Sort Algorithm'"},
+            {"scene": 2, "name": "Initial Array", "duration": "1.5s", "description": "Show unsorted array as colored bars"},
+            {"scene": 3, "name": "Comparison Pass 1", "duration": "3s", "description": "Compare and swap adjacent elements"},
+            {"scene": 4, "name": "Comparison Pass 2", "duration": "2.5s", "description": "Second pass through the array"},
+            {"scene": 5, "name": "Final Sorted", "duration": "2s", "description": "Show the fully sorted array"},
+            {"scene": 6, "name": "Complexity", "duration": "1.5s", "description": "Display time complexity O(n^2)"}
+        ],
+        "graph_extrema": [
+            {"scene": 1, "name": "Title Introduction", "duration": "1.5s", "description": "Display 'Graph Maxima and Minima'"},
+            {"scene": 2, "name": "Coordinate Axes", "duration": "1.5s", "description": "Draw x and y axes with labels"},
+            {"scene": 3, "name": "Function Curve", "duration": "2.5s", "description": "Plot the function curve"},
+            {"scene": 4, "name": "Maximum Point", "duration": "1.5s", "description": "Highlight the local maximum"},
+            {"scene": 5, "name": "Minimum Point", "duration": "1.5s", "description": "Highlight the local minimum"},
+            {"scene": 6, "name": "Labels", "duration": "1.5s", "description": "Add labels for extrema points"}
+        ],
+        "sine_wave": [
+            {"scene": 1, "name": "Title Introduction", "duration": "1.5s", "description": "Display 'Sine Function'"},
+            {"scene": 2, "name": "Coordinate Axes", "duration": "1.5s", "description": "Draw axes with x and y labels"},
+            {"scene": 3, "name": "Wave Drawing", "duration": "3s", "description": "Animate the sine wave being traced"},
+            {"scene": 4, "name": "Formula", "duration": "1.5s", "description": "Display y = sin(x)"}
+        ],
+        "derivative": [
+            {"scene": 1, "name": "Title Introduction", "duration": "1.5s", "description": "Display 'The Derivative'"},
+            {"scene": 2, "name": "Coordinate Axes", "duration": "1.5s", "description": "Draw coordinate system"},
+            {"scene": 3, "name": "Original Function", "duration": "2s", "description": "Plot f(x) = x^2"},
+            {"scene": 4, "name": "Tangent Line", "duration": "2s", "description": "Show tangent line at a point"},
+            {"scene": 5, "name": "Derivative Curve", "duration": "2s", "description": "Plot the derivative f'(x) = 2x"}
+        ],
+    }
+    
+    if anim_type in scene_templates:
+        return scene_templates[anim_type]
+    
+    return [
+        {"scene": 1, "name": "Title Introduction", "duration": "1.5s", "description": f"Display title '{title}'"},
+        {"scene": 2, "name": "Main Animation", "duration": "3s", "description": f"Animate the concept of {concept}"},
+        {"scene": 3, "name": "Labels and Details", "duration": "2s", "description": "Add labels and annotations"},
+        {"scene": 4, "name": "Conclusion", "duration": "2s", "description": "Display summary or formula"}
+    ]
 
 
 def generate_manim_code(script: dict, output_name: str) -> str:
@@ -452,6 +543,123 @@ class EducationalAnimation(Scene):
         self.play(Write(integral))
 '''
     
+    elif anim_type == "vector_addition":
+        code += f'''
+        # Vector Addition Animation
+        # First vector (A)
+        vector_a = Arrow(ORIGIN, RIGHT * 2 + UP * 1, color=BLUE, buff=0)
+        label_a = Text("A", font_size=24, color=BLUE).next_to(vector_a, UP, buff=0.1)
+        self.play(GrowArrow(vector_a), Write(label_a))
+        
+        # Second vector (B) - starts from tip of A
+        start_b = vector_a.get_end()
+        vector_b = Arrow(start_b, start_b + RIGHT * 1 + UP * 2, color=GREEN, buff=0)
+        label_b = Text("B", font_size=24, color=GREEN).next_to(vector_b, RIGHT, buff=0.1)
+        self.play(GrowArrow(vector_b), Write(label_b))
+        
+        # Resultant vector (A + B)
+        resultant = Arrow(ORIGIN, vector_b.get_end(), color={color}, buff=0)
+        label_r = Text("A + B", font_size=24, color={color}).next_to(resultant, LEFT, buff=0.1)
+        self.play(GrowArrow(resultant), Write(label_r))
+        
+        # Show dashed lines for parallelogram
+        dashed_a = DashedLine(vector_b.get_end(), vector_b.get_end() - (RIGHT * 2 + UP * 1), color=BLUE)
+        dashed_b = DashedLine(vector_a.get_end(), vector_a.get_end() + (RIGHT * 1 + UP * 2), color=GREEN)
+        self.play(Create(dashed_a), Create(dashed_b))
+'''
+        if show_formula:
+            code += '''
+        # Formula
+        formula = Text("Vector Sum: A + B = Resultant", font_size=28)
+        formula.to_edge(DOWN)
+        self.play(Write(formula))
+'''
+    
+    elif anim_type == "bubble_sort":
+        code += f'''
+        # Bubble Sort Animation
+        # Create bars representing array values
+        values = [5, 2, 8, 1, 9, 4]
+        colors = [RED, ORANGE, YELLOW, GREEN, BLUE, PURPLE]
+        bars = VGroup()
+        
+        for i, val in enumerate(values):
+            bar = Rectangle(width=0.8, height=val * 0.4, fill_opacity=0.8)
+            bar.set_fill(colors[i])
+            bar.set_stroke(WHITE, 2)
+            bar.move_to(LEFT * 3 + RIGHT * i * 1.2 + UP * (val * 0.2 - 1))
+            bars.add(bar)
+        
+        self.play(Create(bars))
+        self.wait(0.5)
+        
+        # Bubble sort passes (simplified animation)
+        # Pass 1: Compare and swap
+        for i in range(len(values) - 1):
+            # Highlight comparison
+            highlight = SurroundingRectangle(VGroup(bars[i], bars[i+1]), color=WHITE)
+            self.play(Create(highlight), run_time=0.3)
+            
+            if values[i] > values[i+1]:
+                # Swap
+                values[i], values[i+1] = values[i+1], values[i]
+                self.play(
+                    bars[i].animate.shift(RIGHT * 1.2),
+                    bars[i+1].animate.shift(LEFT * 1.2),
+                    run_time=0.4
+                )
+                bars[i], bars[i+1] = bars[i+1], bars[i]
+            
+            self.play(FadeOut(highlight), run_time=0.2)
+        
+        # Show sorted label
+        sorted_label = Text("Sorted!", font_size=36, color=GREEN)
+        sorted_label.to_edge(DOWN)
+        self.play(Write(sorted_label))
+'''
+    
+    elif anim_type == "graph_extrema":
+        code += f'''
+        # Graph with Maxima and Minima
+        axes = Axes(
+            x_range=[-1, 7, 1],
+            y_range=[-2, 4, 1],
+            x_length=8,
+            y_length=5,
+            axis_config={{"include_tip": True}}
+        )
+        x_label = Text("x", font_size=24).next_to(axes.x_axis, RIGHT)
+        y_label = Text("y", font_size=24).next_to(axes.y_axis, UP)
+        self.play(Create(axes), Write(x_label), Write(y_label))
+        
+        # Plot a function with local max and min: y = sin(x) * 2
+        curve = axes.plot(
+            lambda x: 2 * np.sin(x),
+            color={color},
+            x_range=[0, 2*PI]
+        )
+        self.play(Create(curve), run_time=2)
+        
+        # Mark maximum at x = pi/2
+        max_x = PI / 2
+        max_point = Dot(axes.coords_to_point(max_x, 2), color=RED, radius=0.15)
+        max_label = Text("Maximum", font_size=20, color=RED).next_to(max_point, UP)
+        self.play(Create(max_point), Write(max_label))
+        
+        # Mark minimum at x = 3*pi/2
+        min_x = 3 * PI / 2
+        min_point = Dot(axes.coords_to_point(min_x, -2), color=GREEN, radius=0.15)
+        min_label = Text("Minimum", font_size=20, color=GREEN).next_to(min_point, DOWN)
+        self.play(Create(min_point), Write(min_label))
+'''
+        if show_formula:
+            code += '''
+        # Formula
+        formula = Text("Finding peaks and valleys in functions", font_size=24)
+        formula.to_edge(DOWN)
+        self.play(Write(formula))
+'''
+    
     else:
         code += f'''
         # Default: create a circle
@@ -513,19 +721,31 @@ def render_manim_animation(code: str, output_name: str) -> Path:
 
 
 def generate_tts_audio(text: str, output_path: Path) -> Path:
-    """Generate text-to-speech audio using pyttsx3."""
-    import pyttsx3
-    
-    engine = pyttsx3.init()
-    engine.setProperty('rate', 150)
-    engine.setProperty('volume', 0.9)
-    
+    """Generate text-to-speech audio using espeak directly via subprocess."""
+    output_path.mkdir(parents=True, exist_ok=True)
     audio_file = output_path / "narration.wav"
-    engine.save_to_file(text, str(audio_file))
-    engine.runAndWait()
+    
+    text_clean = text.replace('"', '\\"').replace("'", "\\'")
+    
+    result = subprocess.run(
+        [
+            "espeak",
+            "-w", str(audio_file),
+            "-s", "150",
+            "-a", "180",
+            text_clean
+        ],
+        capture_output=True,
+        text=True,
+        timeout=30
+    )
+    
+    if result.returncode != 0:
+        print(f"espeak error: {result.stderr}")
+        raise Exception(f"TTS audio generation failed: {result.stderr}")
     
     if not audio_file.exists():
-        raise Exception("TTS audio generation failed")
+        raise Exception("TTS audio generation failed - file not created")
     
     return audio_file
 
@@ -576,7 +796,7 @@ async def generate_video(input_data: TextInput):
     concept = input_data.text.strip()
     
     if not concept:
-        raise HTTPException(status_code=400, detail="Please provide a concept to animate")
+        raise HTTPException(status_code=400, detail="Please provide a concept to animate. Try something like 'circle', 'Pythagorean theorem', or 'bubble sort'.")
     
     video_id = str(uuid.uuid4())[:8]
     temp_dir = TEMP_DIR / video_id
@@ -587,14 +807,18 @@ async def generate_video(input_data: TextInput):
         
         animation_script = generate_animation_script(concept)
         
+        scene_breakdown = generate_scene_breakdown(animation_script, concept)
+        
         manim_code = generate_manim_code(animation_script, video_id)
         
         video_path = render_manim_animation(manim_code, video_id)
         
+        has_audio = False
         try:
             audio_path = generate_tts_audio(explanation, temp_dir)
             final_video_path = OUTPUT_DIR / f"{video_id}_final.mp4"
             merge_video_audio(video_path, audio_path, final_video_path)
+            has_audio = True
         except Exception as tts_error:
             print(f"TTS/merge error: {tts_error}, using video without audio")
             final_video_path = OUTPUT_DIR / f"{video_id}_final.mp4"
@@ -605,13 +829,28 @@ async def generate_video(input_data: TextInput):
             "video_url": f"/videos/{video_id}_final.mp4",
             "explanation": explanation,
             "animation_type": animation_script.get("type", "unknown"),
-            "title": animation_script.get("title", concept)
+            "title": animation_script.get("title", concept),
+            "scene_breakdown": scene_breakdown,
+            "animation_script": animation_script,
+            "has_audio": has_audio,
+            "generated_code_preview": manim_code[:500] + "..." if len(manim_code) > 500 else manim_code
         })
     
     except Exception as e:
         import traceback
         traceback.print_exc()
-        raise HTTPException(status_code=500, detail=str(e))
+        error_msg = str(e)
+        
+        if "rendering failed" in error_msg.lower():
+            user_friendly_error = f"The animation rendering encountered an issue. This might be due to a complex concept. Please try a simpler term like 'circle' or 'triangle'. Technical details: {error_msg[:200]}"
+        elif "timeout" in error_msg.lower():
+            user_friendly_error = "The animation took too long to generate. Please try a simpler concept."
+        elif "not found" in error_msg.lower():
+            user_friendly_error = "A required component is missing. Please try again or use a different concept."
+        else:
+            user_friendly_error = f"Something went wrong while generating your animation. Please try again with a different concept. Error: {error_msg[:150]}"
+        
+        raise HTTPException(status_code=500, detail=user_friendly_error)
     
     finally:
         try:

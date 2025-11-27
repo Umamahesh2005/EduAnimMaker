@@ -5,7 +5,7 @@ integrations = ["python_openai:1.0.0"]
 
 [nix]
 channel = "stable-25_05"
-packages = ["cairo", "espeak-ng", "ffmpeg", "pango", "pkg-config"]
+packages = ["cairo", "espeak-ng", "ffmpeg", "pango", "pkg-config", "espeak"]
 
 [workflows]
 runButton = "Project"
@@ -36,5 +36,5 @@ localPort = 5000
 externalPort = 80
 
 [[ports]]
-localPort = 41885
+localPort = 45359
 externalPort = 3000

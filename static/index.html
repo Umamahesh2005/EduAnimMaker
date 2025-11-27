@@ -19,7 +19,7 @@
         }
 
         .container {
-            max-width: 900px;
+            max-width: 1000px;
             margin: 0 auto;
             padding: 40px 20px;
         }
@@ -199,6 +199,7 @@
             border-radius: 20px;
             padding: 30px;
             border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 20px;
         }
 
         .result-header {
@@ -249,6 +250,112 @@
         .explanation-text {
             color: #e2e8f0;
             line-height: 1.6;
+        }
+
+        .scene-breakdown {
+            background: rgba(0, 255, 136, 0.1);
+            border-left: 4px solid #00ff88;
+            padding: 20px;
+            border-radius: 0 12px 12px 0;
+            margin-bottom: 20px;
+        }
+
+        .scene-breakdown h3 {
+            color: #00ff88;
+            margin-bottom: 15px;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .scene-list {
+            list-style: none;
+        }
+
+        .scene-item {
+            display: flex;
+            gap: 15px;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .scene-item:last-child {
+            border-bottom: none;
+        }
+
+        .scene-number {
+            background: rgba(0, 255, 136, 0.2);
+            color: #00ff88;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .scene-details {
+            flex: 1;
+        }
+
+        .scene-name {
+            color: #e2e8f0;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .scene-description {
+            color: #718096;
+            font-size: 0.9rem;
+        }
+
+        .scene-duration {
+            color: #00d9ff;
+            font-size: 0.85rem;
+            background: rgba(0, 217, 255, 0.1);
+            padding: 4px 10px;
+            border-radius: 12px;
+            align-self: flex-start;
+        }
+
+        .code-preview {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+        }
+
+        .code-preview h3 {
+            color: #a78bfa;
+            margin-bottom: 15px;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .code-preview pre {
+            color: #e2e8f0;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .toggle-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: #a0aec0;
+            padding: 10px 20px;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        .toggle-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
         }
 
         .action-buttons {
@@ -321,7 +428,7 @@
 
         .features {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 20px;
             margin-top: 40px;
         }
@@ -350,6 +457,20 @@
             color: #718096;
         }
 
+        .audio-badge {
+            display: inline-block;
+            background: rgba(0, 255, 136, 0.2);
+            color: #00ff88;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            margin-left: 10px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
         @media (max-width: 600px) {
             h1 {
                 font-size: 1.8rem;
@@ -369,12 +490,12 @@
     <div class="container">
         <header>
             <h1>Educational Animation Generator</h1>
-            <p class="subtitle">Transform mathematical concepts into beautiful animated videos</p>
+            <p class="subtitle">Transform mathematical concepts into beautiful animated videos with voice narration</p>
         </header>
 
         <section class="input-section">
             <div class="input-group">
-                <input type="text" id="conceptInput" placeholder="Enter a concept (e.g., circle, Pythagorean theorem, sine wave)">
+                <input type="text" id="conceptInput" placeholder="Describe what you want to animate (e.g., 'vector addition', 'bubble sort')">
                 <button class="generate-btn" id="generateBtn" onclick="generateVideo()">Generate Video</button>
             </div>
             <div class="examples">
@@ -383,7 +504,9 @@
                 <button class="example-btn" onclick="setExample('triangle')">Triangle</button>
                 <button class="example-btn" onclick="setExample('Pythagorean theorem')">Pythagorean Theorem</button>
                 <button class="example-btn" onclick="setExample('sine wave')">Sine Wave</button>
-                <button class="example-btn" onclick="setExample('parabola')">Parabola</button>
+                <button class="example-btn" onclick="setExample('vector addition')">Vector Addition</button>
+                <button class="example-btn" onclick="setExample('bubble sort')">Bubble Sort</button>
+                <button class="example-btn" onclick="setExample('graph maxima minima')">Graph Extrema</button>
                 <button class="example-btn" onclick="setExample('derivative')">Derivative</button>
             </div>
         </section>
@@ -414,7 +537,10 @@
             <div class="result-card">
                 <div class="result-header">
                     <h2 class="result-title" id="resultTitle">Your Animation</h2>
-                    <p class="result-type" id="resultType">Animation Type: Circle</p>
+                    <p class="result-type">
+                        <span id="resultType">Animation Type: Circle</span>
+                        <span class="audio-badge" id="audioBadge">With Voice</span>
+                    </p>
                 </div>
                 <div class="video-container">
                     <video id="resultVideo" controls>
@@ -422,10 +548,23 @@
                         Your browser does not support the video tag.
                     </video>
                 </div>
+                
                 <div class="explanation-box">
-                    <p class="explanation-label">Educational Explanation</p>
+                    <p class="explanation-label">Educational Narration</p>
                     <p class="explanation-text" id="explanationText"></p>
                 </div>
+
+                <div class="scene-breakdown" id="sceneBreakdown">
+                    <h3>Scene Timeline</h3>
+                    <ul class="scene-list" id="sceneList"></ul>
+                </div>
+
+                <button class="toggle-btn" onclick="toggleCodePreview()">Show Generated Code</button>
+                <div class="code-preview hidden" id="codePreview">
+                    <h3>Animation Code (Manim)</h3>
+                    <pre id="generatedCode"></pre>
+                </div>
+
                 <div class="action-buttons">
                     <button class="download-btn" onclick="downloadVideo()">Download Video</button>
                     <button class="new-btn" onclick="resetForm()">Create New Animation</button>
@@ -435,29 +574,39 @@
 
         <section class="features">
             <div class="feature-card">
-                <div class="feature-icon">&#x25CB;</div>
+                <div class="feature-icon">&#x25B3;</div>
                 <h3 class="feature-title">Geometric Shapes</h3>
-                <p class="feature-desc">Circles, triangles, squares, and more with labels and formulas</p>
+                <p class="feature-desc">Circles, triangles, squares with labels and formulas</p>
             </div>
             <div class="feature-card">
-                <div class="feature-icon">&#x221E;</div>
-                <h3 class="feature-title">Math Concepts</h3>
-                <p class="feature-desc">Pythagorean theorem, derivatives, integrals, and functions</p>
+                <div class="feature-icon">&#x2192;</div>
+                <h3 class="feature-title">Vector Graphics</h3>
+                <p class="feature-desc">Vector addition and operations with arrows</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">&#x2261;</div>
+                <h3 class="feature-title">Algorithms</h3>
+                <p class="feature-desc">Bubble sort and other algorithmic visualizations</p>
             </div>
             <div class="feature-card">
                 <div class="feature-icon">&#x223F;</div>
-                <h3 class="feature-title">Wave Functions</h3>
-                <p class="feature-desc">Sine, cosine, and other trigonometric visualizations</p>
+                <h3 class="feature-title">Functions</h3>
+                <p class="feature-desc">Graphs, derivatives, integrals with extrema</p>
             </div>
             <div class="feature-card">
                 <div class="feature-icon">&#x266A;</div>
                 <h3 class="feature-title">Voice Narration</h3>
-                <p class="feature-desc">Auto-generated educational explanations with voice-over</p>
+                <p class="feature-desc">Auto-generated educational voice-over</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">&#x2630;</div>
+                <h3 class="feature-title">Scene Breakdown</h3>
+                <p class="feature-desc">View animation timeline and instructions</p>
             </div>
         </section>
 
         <footer>
-            <p>Powered by Manim Animation Engine</p>
+            <p>Powered by Manim Animation Engine with Text-to-Speech</p>
         </footer>
     </div>
 
@@ -488,6 +637,11 @@
             document.getElementById('statusText').textContent = text;
         }
 
+        function toggleCodePreview() {
+            const codePreview = document.getElementById('codePreview');
+            codePreview.classList.toggle('hidden');
+        }
+
         async function generateVideo() {
             const concept = document.getElementById('conceptInput').value.trim();
             
@@ -504,11 +658,14 @@
             showStatus(true);
 
             const stages = [
-                { percent: 10, text: 'Generating educational explanation...' },
-                { percent: 25, text: 'Creating animation script...' },
-                { percent: 50, text: 'Rendering Manim animation...' },
-                { percent: 75, text: 'Generating voice narration...' },
-                { percent: 90, text: 'Merging video and audio...' }
+                { percent: 10, text: 'Analyzing your concept...' },
+                { percent: 20, text: 'Generating educational explanation...' },
+                { percent: 35, text: 'Creating animation script...' },
+                { percent: 50, text: 'Building scene breakdown...' },
+                { percent: 65, text: 'Rendering Manim animation...' },
+                { percent: 80, text: 'Generating voice narration...' },
+                { percent: 90, text: 'Merging video and audio...' },
+                { percent: 95, text: 'Finalizing your video...' }
             ];
 
             let stageIndex = 0;
@@ -517,7 +674,7 @@
                     updateProgress(stages[stageIndex].percent, stages[stageIndex].text);
                     stageIndex++;
                 }
-            }, 2000);
+            }, 1500);
 
             try {
                 const response = await fetch('/api/generate', {
@@ -564,9 +721,42 @@
             document.getElementById('resultType').textContent = `Animation Type: ${data.animation_type || 'Custom'}`;
             document.getElementById('explanationText').textContent = data.explanation || '';
             
+            const audioBadge = document.getElementById('audioBadge');
+            if (data.has_audio) {
+                audioBadge.textContent = 'With Voice';
+                audioBadge.style.display = 'inline-block';
+            } else {
+                audioBadge.textContent = 'No Audio';
+                audioBadge.style.background = 'rgba(255, 255, 255, 0.1)';
+                audioBadge.style.color = '#718096';
+            }
+            
             const video = document.getElementById('resultVideo');
             video.src = data.video_url;
             video.load();
+            
+            if (data.scene_breakdown) {
+                const sceneList = document.getElementById('sceneList');
+                sceneList.innerHTML = '';
+                data.scene_breakdown.forEach(scene => {
+                    const li = document.createElement('li');
+                    li.className = 'scene-item';
+                    li.innerHTML = `
+                        <div class="scene-number">${scene.scene}</div>
+                        <div class="scene-details">
+                            <div class="scene-name">${scene.name}</div>
+                            <div class="scene-description">${scene.description}</div>
+                        </div>
+                        <div class="scene-duration">${scene.duration}</div>
+                    `;
+                    sceneList.appendChild(li);
+                });
+                document.getElementById('sceneBreakdown').style.display = 'block';
+            }
+            
+            if (data.generated_code_preview) {
+                document.getElementById('generatedCode').textContent = data.generated_code_preview;
+            }
             
             showResult(true);
             
@@ -586,6 +776,7 @@
 
         function resetForm() {
             document.getElementById('conceptInput').value = '';
+            document.getElementById('codePreview').classList.add('hidden');
             showResult(false);
             showError(false);
             window.scrollTo({ top: 0, behavior: 'smooth' });
