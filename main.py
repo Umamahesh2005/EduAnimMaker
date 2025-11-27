@@ -161,6 +161,7 @@ def generate_manim_code(script: dict, output_name: str) -> str:
     show_formula = script.get("show_formula", True)
     
     code = f'''from manim import *
+import numpy as np
 
 class EducationalAnimation(Scene):
     def construct(self):
